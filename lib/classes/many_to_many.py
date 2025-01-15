@@ -26,6 +26,8 @@ class Article:
     def author(self, value):
         if isinstance(value, Author):
             self._author = value
+        else:
+            raise TypeError("Author must be an instance of Author.")
 
     @property
     def magazine(self):
@@ -35,11 +37,13 @@ class Article:
     def magazine(self, value):
         if isinstance(value, Magazine):
             self._magazine = value
+        else:
+            raise TypeError("Magazine must be an instance of Magazine.")
 
 
 class Author:
     def __init__(self, name):
-        if not isinstance(name, str) or not name:
+        if not isinstance(name, str) or len(name.strip()) == 0:
             raise ValueError("Name must be a non-empty string.")
         self._name = name
 
@@ -63,9 +67,9 @@ class Author:
 
 class Magazine:
     def __init__(self, name, category):
-        if not isinstance(name, str) or not (2 <= len(name) <= 16):
+        if not isinstance(name, str) or not (2 <= len(name.strip()) <= 16):
             raise ValueError("Name must be a string between 2 and 16 characters.")
-        if not isinstance(category, str) or not category:
+        if not isinstance(category, str) or len(category.strip()) == 0:
             raise ValueError("Category must be a non-empty string.")
         
         self._name = name
@@ -75,9 +79,21 @@ class Magazine:
     def name(self):
         return self._name
 
+    @name.setter
+    def name(self, value):
+        if not isinstance(value, str) or not (2 <= len(value.strip()) <= 16):
+            raise ValueError("Name must be a string between 2 and 16 characters.")
+        self._name = value
+
     @property
     def category(self):
         return self._category
+
+    @category.setter
+    def category(self, value):
+        if not isinstance(value, str) or len(value.strip()) == 0:
+            raise ValueError("Category must be a non-empty string.")
+        self._category = value
 
     def articles(self):
         return [article for article in Article.instances if article.magazine == self]
@@ -93,6 +109,5 @@ class Magazine:
     def contributing_authors(self):
         authors = [article.author for article in self.articles()]
         author_counts = {author: authors.count(author) for author in authors}
-        return [author for author, count in author_counts.items() if count > 2]
-
-
+        result = [author for author, count in author_counts.items() if count > 2]
+        return result if result else None
