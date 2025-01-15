@@ -20,6 +20,6 @@ if __name__ == '__main__':
     author1.add_article(magazine3, "Exploring Mountains")
 
     author3 = Author("Alice Brown")
-    magazine1.add_article(author3, "AI in Everyday Life")
+    article3 = author3.add_article(magazine1, "AI in Everyday Life")
 
     ipdb.set_trace()

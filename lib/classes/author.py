@@ -1,27 +1,25 @@
 class Author:
     def __init__(self, name):
-        if not isinstance(name, str) or len(name) == 0:
+        if not isinstance(name, str) or not name:
             raise ValueError("Name must be a non-empty string.")
         self._name = name
-        self._articles = []
 
     @property
     def name(self):
         return self._name
 
     def articles(self):
-        return self._articles
+        return [article for article in Article.instances if article.author == self]
 
     def magazines(self):
-        return list(set(article.magazine for article in self._articles))
+        return list(set(article.magazine for article in self.articles()))
 
     def add_article(self, magazine, title):
-        article = Article(self, magazine, title)
-        self._articles.append(article)
-        magazine._articles.append(article)
-        return article
+        return Article(self, magazine, title)
 
     def topic_areas(self):
-        if not self._articles:
-            return None
-        return list(set(magazine.category for magazine in self.magazines()))
+        categories = [article.magazine.category for article in self.articles()]
+        return list(set(categories)) if categories else None
+
+    def __repr__(self):
+        return f"Author(name={self._name})"

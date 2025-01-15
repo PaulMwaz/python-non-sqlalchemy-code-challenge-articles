@@ -1,14 +1,18 @@
 class Article:
+    instances = []
+
     def __init__(self, author, magazine, title):
-        if not isinstance(author, Author):
-            raise ValueError("Author must be an instance of Author.")
-        if not isinstance(magazine, Magazine):
-            raise ValueError("Magazine must be an instance of Magazine.")
         if not isinstance(title, str) or not (5 <= len(title) <= 50):
             raise ValueError("Title must be a string between 5 and 50 characters.")
+        if not isinstance(author, Author):
+            raise TypeError("Author must be an instance of Author class.")
+        if not isinstance(magazine, Magazine):
+            raise TypeError("Magazine must be an instance of Magazine class.")
+        
         self._author = author
         self._magazine = magazine
         self._title = title
+        Article.instances.append(self)
 
     @property
     def title(self):
@@ -20,9 +24,8 @@ class Article:
 
     @author.setter
     def author(self, value):
-        if not isinstance(value, Author):
-            raise ValueError("Author must be an instance of Author.")
-        self._author = value
+        if isinstance(value, Author):
+            self._author = value
 
     @property
     def magazine(self):
@@ -30,6 +33,8 @@ class Article:
 
     @magazine.setter
     def magazine(self, value):
-        if not isinstance(value, Magazine):
-            raise ValueError("Magazine must be an instance of Magazine.")
-        self._magazine = value
+        if isinstance(value, Magazine):
+            self._magazine = value
+
+    def __repr__(self):
+        return f"Article(title={self._title}, author={self._author}, magazine={self._magazine})"
